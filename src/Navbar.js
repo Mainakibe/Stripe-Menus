@@ -10,14 +10,16 @@ const Navbar = () => {
     const rect = e.target.getBoundingClientRect();
     const centerPosition = (rect.left + rect.right) / 2;
     const bottomPosition = rect.bottom - 3;
-
     handleSubMenu(parent, { centerPosition, bottomPosition });
-    // console.log(`width: ${centerPosition}, position: ${bottomPosition}`);
-    
+  };
+  const handleMenu = (e) => {
+    if (!e.target.classList.contains('link-btn')) {
+      closeSubMenu();
+    }
   };
 
   return (
-    <nav className="nav">
+    <nav className="nav" onMouseOver={handleMenu}>
       <div className="nav-center">
         <div className="nav-header">
           <img src={logo} alt="logo" className="nav-logo" />

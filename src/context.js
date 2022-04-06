@@ -48,4 +48,4 @@ const SideBarAppProvider = ({ children }) => {
 export const useGlobalContext = () => {
   return useContext(SideBarAppContext);
 };
-export { SideBarAppProvider };
+export { SideBarAppContext, SideBarAppProvider };

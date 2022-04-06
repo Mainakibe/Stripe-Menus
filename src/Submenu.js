@@ -4,29 +4,30 @@ import { useGlobalContext } from './context';
 const Submenu = () => {
   const {
     isSubMenuHovered,
-    page: { links, page },
+    page: { page, links },
     location,
-    handleSubMenu
   } = useGlobalContext();
 
-  const [isColumn, setIsColumn] = useState('col-2');
   const subMenuContainer = useRef(null);
+  const [isColumn, setIsColumn] = useState('col-2');
 
   useEffect(() => {
+    setIsColumn('col-2');
     const container = subMenuContainer.current;
     const { centerPosition, bottomPosition } = location;
     container.style.left = `${centerPosition}px`;
     container.style.top = `${bottomPosition}px`;
+
     if (links.length === 3) {
       setIsColumn('col-3');
-    } else if (links.length > 3) {
+    }
+    if (links.length > 3) {
       setIsColumn('col-4');
     }
-  }, [location, links, page]);
+  }, [page, location, links]);
   return (
     <aside
       className={`${isSubMenuHovered ? 'submenu show' : 'submenu'}`}
-      onMouseOver={handleSubMenu}
       ref={subMenuContainer}
     >
       <section>
