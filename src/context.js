@@ -5,7 +5,9 @@ const SideBarAppContext = createContext();
 
 const SideBarAppProvider = ({ children }) => {
   const [isSideBar, setIsSideBar] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isSubMenuHovered, setIsSubMenuHovered] = useState(false);
+  const [page, setPage] = useState({ page: '', links: [] });
+  const [location, setLocation] = useState({});
 
   const handleSideBar = () => {
     setIsSideBar(true);
@@ -13,13 +15,30 @@ const SideBarAppProvider = ({ children }) => {
   const closeSideBar = () => {
     setIsSideBar(false);
   };
-  const showItems=()=>{
-      setIsHovered(true)
-  }
+
+  const handleSubMenu = (text, coordinates) => {
+    const page = sublinks.find((link) => link.page === text);
+    setPage(page);
+    setLocation(coordinates);
+    setIsSubMenuHovered(true);
+  };
+
+  const closeSubMenu = () => {
+    setIsSubMenuHovered(false);
+  };
 
   return (
     <SideBarAppContext.Provider
-      value={{ isSideBar, handleSideBar, closeSideBar,showItems }}
+      value={{
+        isSideBar,
+        isSubMenuHovered,
+        page,
+        location,
+        handleSideBar,
+        closeSideBar,
+        handleSubMenu,
+        closeSubMenu,
+      }}
     >
       {children}
     </SideBarAppContext.Provider>

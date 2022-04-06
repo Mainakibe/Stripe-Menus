@@ -1,51 +1,46 @@
 import React, { useState, useRef, useEffect } from 'react';
-import sublinks from './data';
+import { useGlobalContext } from './context';
 
-function useHover() {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef(null);
+const Submenu = () => {
+  const {
+    isSubMenuHovered,
+    page: { links, page },
+    location,
+    handleSubMenu
+  } = useGlobalContext();
 
-  const handleMouseOver = () => setHovered(true);
-  const handleMouseOut = () => setHovered(false);
+  const [isColumn, setIsColumn] = useState('col-2');
+  const subMenuContainer = useRef(null);
 
   useEffect(() => {
-    const node = ref.current;
-
-    if (node) {
-      node.addEventListener('mouseover', handleMouseOver);
-      node.addEventListener('mouseout', handleMouseOut);
-
-      return () => {
-        node.removeEventListener('mouseover', handleMouseOver);
-        node.removeEventListener('mouseout', handleMouseOut);
-      };
+    const container = subMenuContainer.current;
+    const { centerPosition, bottomPosition } = location;
+    container.style.left = `${centerPosition}px`;
+    container.style.top = `${bottomPosition}px`;
+    if (links.length === 3) {
+      setIsColumn('col-3');
+    } else if (links.length > 3) {
+      setIsColumn('col-4');
     }
-  }, [ref.current]);
-  return [ref, hovered];
-}
-const Submenu = () => {
-  const [ref, isHovered] = useHover();
+  }, [location, links, page]);
   return (
-    <aside className="submenu">
+    <aside
+      className={`${isSubMenuHovered ? 'submenu show' : 'submenu'}`}
+      onMouseOver={handleSubMenu}
+      ref={subMenuContainer}
+    >
       <section>
-        {sublinks.map((sub) => {
-          const { page } = sub;
-          return (
-            <React.Fragment key={page} ref={ref}>
-              <h4>{page}</h4>
-              <div className={`${isHovered?''}`}>
-                {sub.links.map((link) => {
-                  const { url, label, icon } = link;
-                  return (
-                    <a href={url} key={label}>
-                      {icon} {label}
-                    </a>
-                  );
-                })}
-              </div>
-            </React.Fragment>
-          );
-        })}
+        <h4>{page}</h4>
+        <div className={`submenu-center ${isColumn}`}>
+          {links.map((link, index) => {
+            const { url, label, icon } = link;
+            return (
+              <a href={url} key={index}>
+                {icon} {label}
+              </a>
+            );
+          })}
+        </div>
       </section>
     </aside>
   );
